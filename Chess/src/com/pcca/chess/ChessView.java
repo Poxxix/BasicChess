@@ -12,7 +12,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-public class ChessPanel extends JPanel {
+public class ChessView extends JPanel {
 
 	int originX = 70;
 	int originY = 70;
@@ -20,7 +20,7 @@ public class ChessPanel extends JPanel {
 
 	Map<String, Image> keyNameValueImage = new HashMap<String, Image>();
 
-	public ChessPanel() {
+	public ChessView() {
 		String[] imageNames = { "Rook-white", "Rook-black", "Bishop-white", "Bishop-black", "King-black", "King-white",
 				"Knight-white", "Knight-Black", "Pawn-black", "Pawn-white", "Queen-black", "Queen-white" };
 
