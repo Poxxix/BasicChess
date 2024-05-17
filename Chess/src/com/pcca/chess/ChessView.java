@@ -13,6 +13,8 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 public class ChessView extends JPanel {
+	
+	ChessDelegate chessDelegate;
 
 	int originX = 70;
 	int originY = 70;
@@ -22,7 +24,7 @@ public class ChessView extends JPanel {
 
 	public ChessView() {
 		String[] imageNames = { "Rook-white", "Rook-black", "Bishop-white", "Bishop-black", "King-black", "King-white",
-				"Knight-white", "Knight-Black", "Pawn-black", "Pawn-white", "Queen-black", "Queen-white" };
+				"Knight-white", "Knight-black", "Pawn-black", "Pawn-white", "Queen-black", "Queen-white" };
 
 		try {
 			for (String imgNm : imageNames) {
@@ -44,9 +46,25 @@ public class ChessView extends JPanel {
 		Graphics2D g2 = (Graphics2D) g;
 
 		drawBoard(g2);
-		drawImage(g2, 0,0,"Rook-black");
+	    drawPieces(g2);
 	
 	}
+	private void drawPieces(Graphics2D g2)
+	{
+		for(int row =0; row <8; row++)
+		{
+			for(int col = 0; col<8; col++)
+			{
+				ChessPiece p = chessDelegate.pieceAt(col, row);
+				if(p!= null)
+				{
+					drawImage(g2, col, row, p.imgName);
+				}
+			}
+		}
+		
+	}
+	
 	
 
 	private void drawImage(Graphics2D g2, int col, int row, String imgName) {
