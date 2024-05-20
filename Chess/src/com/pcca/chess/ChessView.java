@@ -16,9 +16,10 @@ public class ChessView extends JPanel {
 	
 	ChessDelegate chessDelegate;
 
-	int originX = 70;
-	int originY = 70;
-	int cellSize = 80;
+	int originX = -1;
+	int originY = -1;
+	int cellSize = -1;
+	double scaleFactor = 0.9;
 
 	Map<String, Image> keyNameValueImage = new HashMap<String, Image>();
 
@@ -42,9 +43,12 @@ public class ChessView extends JPanel {
 	@Override
 	protected void paintChildren(Graphics g) {
 		super.paintChildren(g);
-
+		int size = Math.min(getSize().width, getSize().height);
+		cellSize = (int) (((double) size) * scaleFactor /8) ;
 		Graphics2D g2 = (Graphics2D) g;
 
+	    originX = (getSize().width - 8 * cellSize) /2;
+	    originY = (getSize().height - 8 * cellSize) /2;
 		drawBoard(g2);
 	    drawPieces(g2);
 	
