@@ -9,10 +9,10 @@ public class ChessController implements ChessDelegate {
 	ChessController() {
 		chessModel.reset();
 		JFrame frame = new JFrame("Chess");
-		frame.setSize(800, 800);
+		frame.setSize(1000,1000);
 
-		panel = new ChessView();
-		panel.chessDelegate = this;
+		panel = new ChessView(this);
+;
 
 		frame.add(panel);
 		frame.setVisible(true);

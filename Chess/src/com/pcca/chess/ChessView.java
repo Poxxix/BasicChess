@@ -14,18 +14,22 @@ import javax.swing.JPanel;
 
 public class ChessView extends JPanel {
 	
-	ChessDelegate chessDelegate;
+	private ChessDelegate chessDelegate;
 
-	int originX = -1;
-	int originY = -1;
-	int cellSize = -1;
-	double scaleFactor = 0.9;
+	private int originX = -1;
+	private int originY = -1;
+	private int cellSize = -1;
+	private double scaleFactor = 1;
 
 	Map<String, Image> keyNameValueImage = new HashMap<String, Image>();
 
-	public ChessView() {
-		String[] imageNames = { "Rook-white", "Rook-black", "Bishop-white", "Bishop-black", "King-black", "King-white",
-				"Knight-white", "Knight-black", "Pawn-black", "Pawn-white", "Queen-black", "Queen-white" };
+	ChessView(ChessDelegate chessDelegate) 
+	{
+		this.chessDelegate = chessDelegate;
+	}
+        {
+		String[] imageNames = { ChessConstants.wRook, ChessConstants.bRook, ChessConstants.wBishop, ChessConstants.bBishop, ChessConstants.bKing, ChessConstants.wKing,
+				ChessConstants.wKnight, ChessConstants.bKnight, ChessConstants.bPawn, ChessConstants.wPawn, ChessConstants.bQueen,  ChessConstants.wQueen };
 
 		try {
 			for (String imgNm : imageNames) {
@@ -48,7 +52,7 @@ public class ChessView extends JPanel {
 		Graphics2D g2 = (Graphics2D) g;
 
 	    originX = (getSize().width - 8 * cellSize) /2;
-	    originY = (getSize().height - 8 * cellSize) /2;
+	    originY = (int) ((getSize().height - 7.8 * cellSize) /2); 	
 		drawBoard(g2);
 	    drawPieces(g2);
 	
