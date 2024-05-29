@@ -9,7 +9,7 @@ public class ChessController implements ChessDelegate {
 	ChessController() {
 		chessModel.reset();
 		JFrame frame = new JFrame("Chess");
-		frame.setSize(1000,1000);
+		frame.setSize(900,900);
 
 		panel = new ChessView(this);
 ;

@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
@@ -12,7 +14,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-public class ChessView extends JPanel {
+public class ChessView extends JPanel implements MouseListener {
 	
 	private ChessDelegate chessDelegate;
 
@@ -41,6 +43,7 @@ public class ChessView extends JPanel {
 			e.printStackTrace();
 
 		}
+		addMouseListener(this);
 
 	}
 
@@ -111,4 +114,25 @@ public class ChessView extends JPanel {
 		g2.setColor(light ? Color.white : Color.pink);
 		g2.fillRect(originX + col * cellSize, originY + row * cellSize, cellSize, cellSize);
 	}
+	@Override
+	public void mouseClicked(MouseEvent e) {}
+	@Override
+	public void mousePressed(MouseEvent e) {
+	
+		
+		int y = e.getPoint().y;	
+		int row = (y - originY) /cellSize;
+		System.out.println("fromr" + row);
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		int y = e.getPoint().y;
+		int row = (y - originY) /cellSize;
+		System.out.println("tor" + row);
+		}
+	@Override
+	public void mouseEntered(MouseEvent e) {
+	}
+	@Override
+	public void mouseExited(MouseEvent e) {}
 }

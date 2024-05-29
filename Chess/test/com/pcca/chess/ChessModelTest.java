@@ -8,7 +8,27 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 class ChessModelTest  {
-
+	@Test
+	void testReset()
+	{
+		ChessModel chessModel = new ChessModel();
+		chessModel.reset();
+		chessModel.movePiece(0, 1, 0, 2);
+		chessModel.reset();
+		System.out.println(chessModel);
+	}
+	
+	
+	@Test
+	void testMovePiece()
+	{
+		ChessModel chessModel = new ChessModel();
+		chessModel.reset();
+		assertNull(chessModel.pieceAt(0,2));
+		
+		chessModel.movePiece(1,1,1,4);
+		System.out.println(chessModel);
+	}
 	@Test
 	void testPieceAt()
 	{
@@ -27,7 +47,7 @@ class ChessModelTest  {
 		ChessModel chessModel = new ChessModel();
 		assertTrue(chessModel.toString().contains("0 . . . . . . . "));
 		chessModel.reset();
-	    System.out.println(chessModel);
+	  
 		
 	}
 
