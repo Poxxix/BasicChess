@@ -34,12 +34,30 @@ public class ChessModel {
 			{
 				return;
 			}
+			ChessPiece target = pieceAt(toCol,toRow);
+			{
+				if(target != null)
+				{
+					if(target.player == candidate.player)
+					{
+						return;
+					}
+					else
+					{
+						piecesBox.remove(target);
+					}
+				}
+			}
 			candidate.col = toCol;
 			candidate.row = toRow;
+			//System.out.println(piecesBox.size()); 
+			//test so quan linh con lai 
+			
 	}
 
 	ChessPiece pieceAt(int col, int row) {
-		for (ChessPiece chessPiece : piecesBox)
+		for (ChessPiece chessPiece : piecesBox) 
+
 
 		{
 			if (chessPiece.col == col && chessPiece.row == row) {
