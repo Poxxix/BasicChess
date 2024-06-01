@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 public class ChessView extends JPanel implements MouseListener {
-	
+
 	private ChessDelegate chessDelegate;
 
 	private int originX = -1;
@@ -24,14 +24,18 @@ public class ChessView extends JPanel implements MouseListener {
 	private double scaleFactor = 1;
 
 	Map<String, Image> keyNameValueImage = new HashMap<String, Image>();
+	private int fromCol = -1;
+	private int fromRow = -1;
 
-	ChessView(ChessDelegate chessDelegate) 
-	{
+	ChessView(ChessDelegate chessDelegate) {
 		this.chessDelegate = chessDelegate;
 	}
-        {
-		String[] imageNames = { ChessConstants.wRook, ChessConstants.bRook, ChessConstants.wBishop, ChessConstants.bBishop, ChessConstants.bKing, ChessConstants.wKing,
-				ChessConstants.wKnight, ChessConstants.bKnight, ChessConstants.bPawn, ChessConstants.wPawn, ChessConstants.bQueen,  ChessConstants.wQueen };
+
+	{
+		String[] imageNames = { ChessConstants.wRook, ChessConstants.bRook, ChessConstants.wBishop,
+				ChessConstants.bBishop, ChessConstants.bKing, ChessConstants.wKing, ChessConstants.wKnight,
+				ChessConstants.bKnight, ChessConstants.bPawn, ChessConstants.wPawn, ChessConstants.bQueen,
+				ChessConstants.wQueen };
 
 		try {
 			for (String imgNm : imageNames) {
@@ -51,36 +55,31 @@ public class ChessView extends JPanel implements MouseListener {
 	protected void paintChildren(Graphics g) {
 		super.paintChildren(g);
 		int size = Math.min(getSize().width, getSize().height);
-		cellSize = (int) (((double) size) * scaleFactor /8) ;
+		cellSize = (int) (((double) size) * scaleFactor / 8);
 		Graphics2D g2 = (Graphics2D) g;
 
-	    originX = (getSize().width - 8 * cellSize) /2;
-	    originY = (int) ((getSize().height - 7.8 * cellSize) /2); 	
+		originX = (getSize().width - 8 * cellSize) / 2;
+		originY = (int) ((getSize().height - 7.8 * cellSize) / 2);
 		drawBoard(g2);
-	    drawPieces(g2);
-	
+		drawPieces(g2);
+
 	}
-	private void drawPieces(Graphics2D g2)
-	{
-		for(int row =0; row <8; row++)
-		{
-			for(int col = 0; col<8; col++)
-			{
+
+	private void drawPieces(Graphics2D g2) {
+		for (int row = 0; row < 8; row++) {
+			for (int col = 0; col < 8; col++) {
 				ChessPiece p = chessDelegate.pieceAt(col, row);
-				if(p!= null)
-				{
+				if (p != null) {
 					drawImage(g2, col, row, p.imgName);
 				}
 			}
 		}
-		
+
 	}
-	
-	
 
 	private void drawImage(Graphics2D g2, int col, int row, String imgName) {
 		Image img = keyNameValueImage.get(imgName);
-		g2.drawImage(img, originX + col * cellSize,originX + row * cellSize, cellSize, cellSize, null);
+		g2.drawImage(img, originX + col * cellSize, originX + row * cellSize, cellSize, cellSize, null);
 	}
 
 	private Image LoadImage(String imgFileName) throws Exception {
@@ -114,25 +113,34 @@ public class ChessView extends JPanel implements MouseListener {
 		g2.setColor(light ? Color.white : Color.pink);
 		g2.fillRect(originX + col * cellSize, originY + row * cellSize, cellSize, cellSize);
 	}
+
 	@Override
-	public void mouseClicked(MouseEvent e) {}
+	public void mouseClicked(MouseEvent e) {
+	}
+
 	@Override
 	public void mousePressed(MouseEvent e) {
-	
-		
-		int y = e.getPoint().y;	
-		int row = (y - originY) /cellSize;
-		System.out.println("fromr" + row);
+
+		fromCol = (e.getPoint().x - originX) / cellSize;
+		fromRow = (e.getPoint().y - originY) / cellSize;
+
 	}
+
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		int y = e.getPoint().y;
-		int row = (y - originY) /cellSize;
-		System.out.println("tor" + row);
-		}
+	
+		int col = (e.getPoint().x - originX) / cellSize;
+		int row = (e.getPoint().y - originY) / cellSize;
+		//System.out.println("from " + fromCol + " to" + col);
+		chessDelegate.movePiece(fromCol, fromRow, col, row);
+
+	}
+
 	@Override
 	public void mouseEntered(MouseEvent e) {
 	}
+
 	@Override
-	public void mouseExited(MouseEvent e) {}
+	public void mouseExited(MouseEvent e) {
+	}
 }

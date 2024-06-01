@@ -29,4 +29,12 @@ public class ChessController implements ChessDelegate {
 
 	}
 
+	@Override
+	public void movePiece(int fromCol, int fromRow, int toCol, int toRow) {
+		// TODO Auto-generated method stub
+		chessModel.movePiece(fromCol, fromRow, toCol, toRow);
+		panel.repaint();
+		
+	}
+
 }
