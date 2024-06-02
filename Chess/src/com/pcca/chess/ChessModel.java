@@ -5,6 +5,7 @@ import java.util.Set;
 
 public class ChessModel {
 	private Set<ChessPiece> piecesBox = new HashSet<ChessPiece>();
+	private Player playerInTurn = Player.WHITE;
 
 	void reset() {
 		//K xoa la loi cuc
@@ -26,11 +27,13 @@ public class ChessModel {
 		piecesBox.add(new ChessPiece(3, 7, Player.BLACK, Rank.QUEEN, ChessConstants.bQueen));
 		piecesBox.add(new ChessPiece(4, 7, Player.BLACK, Rank.KING, ChessConstants.bKing));
 		piecesBox.add(new ChessPiece(4, 0, Player.WHITE, Rank.QUEEN, ChessConstants.wQueen));
+		
+		playerInTurn = Player.WHITE;
 	}
 
 	void movePiece(int fromCol, int fromRow, int toCol, int toRow) {
 			ChessPiece candidate = pieceAt(fromCol, fromRow);
-			if (candidate == null)
+			if (candidate == null || candidate.player != playerInTurn )
 			{
 				return;
 			}
@@ -52,6 +55,8 @@ public class ChessModel {
 			candidate.row = toRow;
 			//System.out.println(piecesBox.size()); 
 			//test so quan linh con lai 
+			playerInTurn = playerInTurn == Player.WHITE ? Player.BLACK : Player.WHITE;
+			//logic phan nguoi choi
 			
 	}
 

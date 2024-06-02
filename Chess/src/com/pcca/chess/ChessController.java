@@ -2,6 +2,8 @@ package com.pcca.chess;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -9,7 +11,7 @@ import javax.swing.JPanel;
 
 public class ChessController implements ChessDelegate {
 	private ChessModel chessModel = new ChessModel();
-	private ChessView centerPanel;
+	private ChessView mainBoardPanel;
 
 	ChessController() {
 		chessModel.reset();
@@ -18,16 +20,24 @@ public class ChessController implements ChessDelegate {
 	
 		frame.setLayout(new BorderLayout());
 		
-		centerPanel = new ChessView(this);
+		mainBoardPanel = new ChessView(this);
 
 
-		frame.add(centerPanel, BorderLayout.CENTER );
-		JPanel southPandel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		frame.add(mainBoardPanel, BorderLayout.CENTER );
+		JPanel underPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		JButton resetBtn = new JButton("Reset");
-		southPandel.add(resetBtn);
+		underPanel.add(resetBtn);
+		resetBtn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				chessModel.reset();
+				mainBoardPanel.repaint();
+			}
+		});
 		JButton Delete = new JButton("Delete");
-		southPandel.add(Delete);
-		frame.add(southPandel, BorderLayout.PAGE_END);
+		underPanel.add(Delete);
+		frame.add(underPanel, BorderLayout.PAGE_END);
 		
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -47,7 +57,7 @@ public class ChessController implements ChessDelegate {
 	public void movePiece(int fromCol, int fromRow, int toCol, int toRow) {
 		// TODO Auto-generated method stub
 		chessModel.movePiece(fromCol, fromRow, toCol, toRow);
-		centerPanel.repaint();
+		mainBoardPanel.repaint();
 		
 	}
 
