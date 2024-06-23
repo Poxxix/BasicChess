@@ -151,7 +151,7 @@ public class ChessView extends JPanel implements MouseListener , MouseMotionList
 
 	private void drawImage(Graphics2D g2, int col, int row, String imgName) {
 		Image img = keyNameValueImage.get(imgName);
-		g2.drawImage(img, originX + col * cellSize, originX + row * cellSize, cellSize, cellSize, null);
+		g2.drawImage(img, originX + col * cellSize, originX + (7 - row) * cellSize, cellSize, cellSize, null);
 	}
 
 	private Image LoadImage(String imgFileName) throws Exception {
