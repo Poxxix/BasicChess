@@ -53,7 +53,71 @@ public class ChessView extends JPanel implements MouseListener , MouseMotionList
 		addMouseListener(this);
 		addMouseMotionListener(this);
 	}
+	public enum Theme {
+	    CLASSIC(Color.white, Color.pink, "classic/"),
+	    DARK(Color.darkGray, Color.gray, "color/"),
+	    BROWN(new Color(240, 217, 181), new Color(181, 136, 99), "animal/"),
+	    PURPLE(Color.getHSBColor(0.75f, 0.8f, 0.6f), Color.getHSBColor(0.75f, 0.8f, 0.4f), "dark/");
+	    private final Color lightColor;
+	    private final Color darkColor;
+	    private final String imagePath;
 
+	    Theme(Color lightColor, Color darkColor, String imagePath) {
+	        this.lightColor = lightColor;
+	        this.darkColor = darkColor;
+	        this.imagePath = imagePath;
+	    }
+
+	    public Color getLightColor() {
+	        return lightColor;
+	    }
+
+	    public Color getDarkColor() {
+	        return darkColor;
+	    }
+	    public String getImagePath() {
+	        return imagePath;
+	    }
+
+	}
+	private void loadImagesForTheme() {
+        keyNameValueImage.clear();
+        String[] imageNames = { ChessConstants.wRook, ChessConstants.bRook, ChessConstants.wBishop,
+                ChessConstants.bBishop, ChessConstants.bKing, ChessConstants.wKing, ChessConstants.wKnight,
+                ChessConstants.bKnight, ChessConstants.bPawn, ChessConstants.wPawn, ChessConstants.bQueen,
+                ChessConstants.wQueen };
+
+        try {
+            for (String imgNm : imageNames) {
+                Image img = LoadImage(currentTheme.getImagePath() + imgNm + ".png");
+                keyNameValueImage.put(imgNm, img);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+	// Thêm biến currentTheme vào ChessView
+	private Theme currentTheme = Theme.CLASSIC;
+
+	// Thêm phương thức changeTheme vào ChessView
+	   // Thay đổi phương thức changeTheme để tải lại ảnh quân cờ khi theme thay đổi
+	public void changeTheme(Theme newTheme) {
+	    currentTheme = newTheme;
+	    loadImagesForTheme();
+	    repaint(); // Cập nhật lại bảng cờ với theme mới
+	}
+	
+	 {
+	        loadImagesForTheme();
+	        addMouseListener(this);
+	        addMouseMotionListener(this);
+	    }
+
+	// Thay đổi phương thức Square để sử dụng currentTheme
+	private void Square(Graphics2D g2, int col, int row, boolean light) {
+	    g2.setColor(light ? currentTheme.getLightColor() : currentTheme.getDarkColor());
+	    g2.fillRect(originX + col * cellSize, originY + row * cellSize, cellSize, cellSize);
+	}
 	@Override
 	protected void paintChildren(Graphics g) {
 		super.paintChildren(g);
@@ -91,17 +155,15 @@ public class ChessView extends JPanel implements MouseListener , MouseMotionList
 	}
 
 	private Image LoadImage(String imgFileName) throws Exception {
-		ClassLoader classLoader = getClass().getClassLoader();
-		URL resU = classLoader.getResource("img/" + imgFileName);
+	    ClassLoader classLoader = getClass().getClassLoader();
+	    URL resU = classLoader.getResource("img/" + imgFileName);
 
-		if (resU == null) {
-			return null;
-		} else {
-			File imgFile = new File(resU.toURI());
-
-			return ImageIO.read(imgFile);
-
-		}
+	    if (resU == null) {
+	        return null;
+	    } else {
+	        File imgFile = new File(resU.toURI());
+	        return ImageIO.read(imgFile);
+	    }
 	}
 
 	private void drawBoard(Graphics2D g2) {
@@ -116,12 +178,9 @@ public class ChessView extends JPanel implements MouseListener , MouseMotionList
 		}
 
 	}
-
-	private void Square(Graphics2D g2, int col, int row, boolean light) {
-		g2.setColor(light ? Color.white : Color.pink);
-		g2.fillRect(originX + col * cellSize, originY + row * cellSize, cellSize, cellSize);
-	}
-
+	
+	
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 	}
@@ -141,6 +200,7 @@ public class ChessView extends JPanel implements MouseListener , MouseMotionList
 		int col = (e.getPoint().x - originX) / cellSize;
 		int row = (e.getPoint().y - originY) / cellSize;
 		//System.out.println("from " + fromCol + " to" + col);
+		
 		//test vi tri 
 		chessDelegate.movePiece(fromCol, fromRow, col, row);
 		movingPiece = null;
