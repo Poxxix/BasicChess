@@ -1,4 +1,4 @@
-# Project Cờ Vua 2 Người Sử Dụng Socket  :black_square_button:
+# Cờ Vua 2 Người Sử Dụng Socket  :black_square_button:
 
 ## Giới Thiệu
 
