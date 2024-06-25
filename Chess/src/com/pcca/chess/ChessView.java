@@ -189,7 +189,7 @@ public class ChessView extends JPanel implements MouseListener , MouseMotionList
 	public void mousePressed(MouseEvent e) {
 
 		fromCol = (e.getPoint().x - originX) / cellSize;
-		fromRow = (e.getPoint().y - originY) / cellSize;
+		fromRow = 7 -(e.getPoint().y - originY) / cellSize;
 		movingPiece = chessDelegate.pieceAt(fromCol, fromRow);
 
 	}
@@ -198,11 +198,14 @@ public class ChessView extends JPanel implements MouseListener , MouseMotionList
 	public void mouseReleased(MouseEvent e) {
 	
 		int col = (e.getPoint().x - originX) / cellSize;
-		int row = (e.getPoint().y - originY) / cellSize;
-		//System.out.println("from " + fromCol + " to" + col);
+		int row = 7 -(e.getPoint().y - originY) / cellSize;
 		
+		if ( fromCol != col || fromRow != row)
+		{
+			chessDelegate.movePiece(fromCol, fromRow, col, row);
+		}
+		//System.out.println("from " + fromCol + " to" + col);
 		//test vi tri 
-		chessDelegate.movePiece(fromCol, fromRow, col, row);
 		movingPiece = null;
 		movingPiecePoint = null;
 
