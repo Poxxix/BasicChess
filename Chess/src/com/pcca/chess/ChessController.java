@@ -21,7 +21,7 @@ import javax.swing.SwingUtilities;
 
 import com.pcca.chess.ChessView.Theme;
 
-public class ChessController implements ChessDelegate, ActionListener, Runnable {
+public class ChessController implements ChessDelegate, ActionListener {
 	private ChessModel chessModel = new ChessModel();
 	private ChessView mainBoardPanel;
 	private JButton resetBtn;
@@ -29,9 +29,9 @@ public class ChessController implements ChessDelegate, ActionListener, Runnable 
 	private JButton serverBtn;
 	private JButton themeBtn;
 	private PrintWriter printWriter;
-	private Scanner scanner;
 	private JFrame frame;
-
+	private Socket socket;
+	private int PORT = 50000;
 	private Theme currentTheme = Theme.CLASSIC;
 
 	ChessController() {
@@ -79,8 +79,12 @@ public class ChessController implements ChessDelegate, ActionListener, Runnable 
 			public void windowClosing(WindowEvent e) {
 				super.windowClosing(e);
 				printWriter.close();
-				scanner.close();
-
+				try {
+					socket.close();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 	}
@@ -106,11 +110,11 @@ public class ChessController implements ChessDelegate, ActionListener, Runnable 
 
 	}
 	
-	private void reciveMove()
+	private void reciveMove(Scanner scanner)
 	{
 		while (scanner.hasNextLine()) {
 			var moveString = scanner.nextLine();// "0,1,0,2"
-			System.out.println("from server: " + moveString);
+			//System.out.println("chess move: " + moveString);//
 			//test move
 			var moveStringArr = moveString.split(",");// ["0","1","0","2"]
 			var fromCol = Integer.parseInt(moveStringArr[0]);
@@ -127,7 +131,52 @@ public class ChessController implements ChessDelegate, ActionListener, Runnable 
 			});// Code luon luon duoc cap nhat chu k la sap
 		}
 	}
+	
+	private void runSocketServer() {
+		Executors.newFixedThreadPool(1).execute(new Runnable() {
+			@Override
+			public void run() {
+				try (var listener = new ServerSocket(PORT)) {
+					System.out.println("server is listenting on port" + PORT);
+								socket = listener.accept();
+								printWriter = new PrintWriter(socket.getOutputStream(), true);
+								var scanner = new Scanner(socket.getInputStream());
+							
+							reciveMove(scanner);
+						}
+						
+							// taskkill /PID <PID> /F
+							// netstat -ano | findstr :50000
+							// nc localhost 50000
+				catch (IOException e1) {
 
+					e1.printStackTrace();
+				}
+				
+			}
+		});
+	}
+	private void runSocketClient() {
+		try {
+			socket = new Socket("localhost", PORT);
+			System.out.println("client connected to port " + PORT);
+			var scanner = new Scanner(socket.getInputStream());
+			printWriter = new PrintWriter(socket.getOutputStream(),true);
+		
+		Executors.newFixedThreadPool(1).execute(new Runnable() {
+			
+			@Override
+			public void run() {
+			reciveMove(scanner);
+				
+			}
+		});
+
+	} catch (IOException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
+	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -135,31 +184,13 @@ public class ChessController implements ChessDelegate, ActionListener, Runnable 
 			chessModel.reset();
 			mainBoardPanel.repaint();
 		} else if (e.getSource() == serverBtn) {
-			var pool = Executors.newFixedThreadPool(1);
-			pool.execute(this);
+			runSocketServer();
+			serverBtn.setEnabled(false);
 			frame.setTitle("Chess Server - KienDz");
 		} else if (e.getSource() == cleintBtn) {
 			frame.setTitle("Chess Client - KienDz");
-			try {
-				if (scanner == null || printWriter == null)
-				{
-					var socket = new Socket("localhost", 50000);
-					scanner = new Scanner(socket.getInputStream());
-					printWriter = new PrintWriter(socket.getOutputStream(),true);
-				}
-				Executors.newFixedThreadPool(1).execute(new Runnable() {
-					
-					@Override
-					public void run() {
-						reciveMove();
-						
-					}
-				});
-		
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			cleintBtn.setEnabled(false);
+			runSocketClient();
 		} else if (e.getSource() == themeBtn) {
 
 			// System.out.println("theme changed");
@@ -182,28 +213,5 @@ public class ChessController implements ChessDelegate, ActionListener, Runnable 
 		}
 	}
 
-	@Override
-	public void run() {
-		try (var listener = new ServerSocket(50000)) {
-			System.out.println("server is listenting to port 50000");
-			
-					if (scanner == null || printWriter == null){
-						var socket = listener.accept();
-						printWriter = new PrintWriter(socket.getOutputStream(), true);
-						scanner = new Scanner(socket.getInputStream());
-					}
-					reciveMove();
-				}
-				
-					// taskkill /PID <PID> /F
-					// netstat -ano | findstr :50000
-					// nc localhost 50000
-
-				
-			
-		catch (IOException e1) {
-
-			e1.printStackTrace();
-		}
-	}
+	
 }
