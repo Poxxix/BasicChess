@@ -21,7 +21,7 @@
 ## Cài đặt
 
 1. Clone repository này về máy local:
-git clone https://github.com/your-username/chess-game.git
+[git clone https://github.com/Poxxix/BasicChess]
 2. Mở Eclipse IDE
 3. Chọn File > Import > General > Existing Projects into Workspace
 4. Chọn thư mục chứa project vừa clone
