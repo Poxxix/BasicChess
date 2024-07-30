@@ -29,8 +29,8 @@ git clone https://github.com/your-username/chess-game.git
 
 ## Cách sử dụng
 
-1. Chạy file `Server.java` để khởi động máy chủ
-2. Chạy file `Client.java` trên hai máy tính khác nhau (hoặc hai lần trên cùng một máy) để bắt đầu game
+1. Nhấn `Client` để khởi động máy chủ
+2. Nhấn `Connect` trên máy còn lại để bắt đầu game
 3. Thực hiện các nước đi bằng cách click chuột
 
 ## Đóng góp
